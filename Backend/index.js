@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from 'path'
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
@@ -23,10 +24,15 @@ try {
 } catch (error) {
     console.log("Error: ", error);
 }
-
+const __dirname=path.resolve()
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
+
+app.use(express.static(path.join(__dirname,'../Frontend/dist')))
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'Frontend','dist','index.html'))
+})
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
